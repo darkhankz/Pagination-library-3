@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import com.movies.pagination_library_3.databinding.FragmentMainBinding
-import com.movies.pagination_library_3.model.repository.MainRepository
+import com.movies.pagination_library_3.model.repository.MainRepositoryImpl
 import com.movies.pagination_library_3.model.repository.MyViewModelFactory
 import com.movies.pagination_library_3.model.retrofit.ApiInterface
 import com.movies.pagination_library_3.view.adapter.MoviePagerAdapter
@@ -37,13 +37,11 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val retrofitService = ApiInterface.create()
-        val mainRepository = MainRepository(retrofitService)
         binding.recyclerViewFragment.adapter = adapter
 
         viewModel = ViewModelProvider(
             this,
-            MyViewModelFactory(mainRepository)
+            MyViewModelFactory()
         )[MainViewModel::class.java]
 
         viewModel.errorMessage.observe(viewLifecycleOwner) {
