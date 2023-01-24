@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private val adapter = MoviePagerAdapter()
     lateinit var binding: ActivityMainBinding
-
+//fragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
