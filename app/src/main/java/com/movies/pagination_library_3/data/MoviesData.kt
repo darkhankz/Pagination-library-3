@@ -6,5 +6,3 @@ data class MoviesData(
     val total_pages: Int,
     val total_results: Int
 )
-
-const val NETWORK_PAGE_SIZE = 25
