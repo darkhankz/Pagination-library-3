@@ -2,22 +2,24 @@ package com.movies.pagination_library_3.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
+import com.movies.pagination_library_3.MAIN
 import com.movies.pagination_library_3.R
 import com.movies.pagination_library_3.databinding.ActivityMainBinding
 
+
 class MainActivity : AppCompatActivity() {
-    private lateinit var navController: NavController
-
-
+    lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        MAIN = this
         setContentView(binding.root)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
+        this.navController = navController
     }
 }
