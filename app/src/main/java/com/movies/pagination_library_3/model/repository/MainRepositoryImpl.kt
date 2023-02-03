@@ -8,11 +8,14 @@ import androidx.paging.liveData
 import com.movies.pagination_library_3.API_KEY
 import com.movies.pagination_library_3.NETWORK_PAGE_SIZE
 import com.movies.pagination_library_3.data.MoviesDetailsData
+import com.movies.pagination_library_3.data.trailers.TrailersResponse
+import com.movies.pagination_library_3.data.trailers.TrailersResult
 import com.movies.pagination_library_3.model.retrofit.ApiInterface
+import retrofit2.Call
 import retrofit2.Response
 
 class MainRepositoryImpl : MainRepository {
-    private val apiInterface = ApiInterface.RetrofitService.api
+    private val apiInterface = ApiInterface.create()
     override fun getAllMovies(): LiveData<PagingData<MoviesDetailsData>> {
         return Pager(
             config = PagingConfig(
@@ -21,7 +24,7 @@ class MainRepositoryImpl : MainRepository {
                 initialLoadSize = 2
             ),
             pagingSourceFactory = {
-                MoviePagingSource(ApiInterface.RetrofitService.api)
+                MoviePagingSource(ApiInterface.create())
             }
             , initialKey = 1
         ).liveData
@@ -31,5 +34,8 @@ class MainRepositoryImpl : MainRepository {
         return apiInterface.getMoviesDetails(movieId, API_KEY)
     }
 
+    override suspend fun fetchTrailers(movieId: Int): Response<TrailersResponse> {
+        return apiInterface.getTrailers(movieId, API_KEY)
 
+    }
 }
