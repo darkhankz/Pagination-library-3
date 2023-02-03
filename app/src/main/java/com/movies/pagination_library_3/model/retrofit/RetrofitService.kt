@@ -3,6 +3,8 @@ package com.movies.pagination_library_3.model.retrofit
 import com.movies.pagination_library_3.BASE_URL
 import com.movies.pagination_library_3.data.MoviesData
 import com.movies.pagination_library_3.data.MoviesDetailsData
+import com.movies.pagination_library_3.data.trailers.TrailersResponse
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -23,14 +25,18 @@ interface ApiInterface {
         @Query("api_key") apiKey: String)
     : Response<MoviesDetailsData>
 
-    object RetrofitService {
-        val api: ApiInterface by lazy {
-            Retrofit.Builder()
-                .baseUrl(BASE_URL)
+    @GET("movie/{movie_id}/videos")
+    fun getTrailers(@Path("movie_id") movieId: Int, @Query("api_key") apiKey: String): Call<TrailersResponse>
+
+    companion object{
+        fun create() : ApiInterface {
+            val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(BASE_URL)
                 .build()
-                .create(ApiInterface::class.java)
+            return retrofit.create(ApiInterface::class.java)
         }
     }
 }
+
 

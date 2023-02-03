@@ -11,8 +11,10 @@ import com.movies.pagination_library_3.data.MoviesDetailsData
 import com.movies.pagination_library_3.model.repository.*
 import com.movies.pagination_library_3.moviesRoomImpl
 
+
 class MainViewModel(private val mMainRepository : MainRepository): ViewModel() {
     val errorMessage = MutableLiveData<String>()
+
 
     val context = MAIN.application
     fun getMovieList(): LiveData<PagingData<MoviesDetailsData>> {
@@ -24,6 +26,6 @@ class MainViewModel(private val mMainRepository : MainRepository): ViewModel() {
         moviesRoomImpl = MoviesRoomImpl(daoMovies)
     }
 
-    //start
-
 }
+
+
