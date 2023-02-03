@@ -9,6 +9,7 @@ import com.movies.pagination_library_3.API_KEY
 import com.movies.pagination_library_3.NETWORK_PAGE_SIZE
 import com.movies.pagination_library_3.data.MoviesDetailsData
 import com.movies.pagination_library_3.data.trailers.TrailersResponse
+import com.movies.pagination_library_3.data.trailers.TrailersResult
 import com.movies.pagination_library_3.model.retrofit.ApiInterface
 import retrofit2.Call
 import retrofit2.Response
@@ -33,8 +34,8 @@ class MainRepositoryImpl : MainRepository {
         return apiInterface.getMoviesDetails(movieId, API_KEY)
     }
 
-    override fun fetchTrailers(movieId: Int): Call<TrailersResponse> {
-        return apiInterface.getTrailers(movieId, "6e76ecffda0a59dc4f19a343c6e7648a")
+    override suspend fun fetchTrailers(movieId: Int): Response<TrailersResponse> {
+        return apiInterface.getTrailers(movieId, API_KEY)
 
     }
 }

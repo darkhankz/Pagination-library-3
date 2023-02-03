@@ -54,8 +54,6 @@ class DetailFragment : Fragment() {
         if (movieId != null) {
             favoriteViewModel.fetchTrailers(movieId)
             initObserversTrailers()
-            Log.d("MovieDetailsActivity", "Movie trailer: ${favoriteViewModel.movieTrailers}")
-
         }
     }
     private fun initObservers() {
@@ -68,11 +66,13 @@ class DetailFragment : Fragment() {
 
     private fun initObserversTrailers() {
         favoriteViewModel.apply {
-            movieTrailers.observe(MAIN){
-                trailersAdapter = TrailersAdapter(it)
-                trailersRecyclerView.adapter = trailersAdapter
-
-            } }
+            movieTrailersLiveData.observe(MAIN) {
+                if (it != null) {
+                    trailersAdapter = TrailersAdapter(it)
+                    trailersRecyclerView.adapter = trailersAdapter
+                }
+            }
+        }
     }
 
 
