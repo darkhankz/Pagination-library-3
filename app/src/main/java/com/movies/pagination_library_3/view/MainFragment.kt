@@ -19,6 +19,7 @@ import com.movies.pagination_library_3.model.repository.MyViewModelFactory
 import com.movies.pagination_library_3.view.adapter.MoviePagerAdapter
 import com.movies.pagination_library_3.viewModel.MainViewModel
 import kotlinx.coroutines.launch
+
 class MainFragment : Fragment(), MenuProvider {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
@@ -32,9 +33,13 @@ class MainFragment : Fragment(), MenuProvider {
         // Inflate the layout for this fragment
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         binding.recyclerViewFragment.adapter = adapter
+        initMenuHost()
+        return binding.root
+    }
+
+    private fun initMenuHost() {
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,11 +47,10 @@ class MainFragment : Fragment(), MenuProvider {
         initViewModelFactory()
         initAdapterClickListener()
         viewModel.init()
-        errorObserver()
+        initErrorObserver()
         initLoadState()
         observer()
         Log.d("AAA", "Fragment Created")
-
 
     }
 
@@ -58,12 +62,11 @@ class MainFragment : Fragment(), MenuProvider {
                 bundle.putInt("movie_id", movieId)
                 fragment.arguments = bundle
                 MAIN.navController.navigate(R.id.action_mainFragment_to_detailFragment, bundle)
-
             }
         })
     }
 
-    private fun errorObserver() {
+    private fun initErrorObserver() {
         viewModel.errorMessage.observe(viewLifecycleOwner) {
             Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
         }
@@ -74,7 +77,6 @@ class MainFragment : Fragment(), MenuProvider {
             this,
             MyViewModelFactory()
         )[MainViewModel::class.java]
-
     }
 
     private fun initLoadState() {

@@ -13,12 +13,11 @@ import com.movies.pagination_library_3.moviesRoomImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class FavoriteViewModel : ViewModel(){
-
+class FavoriteViewModel : ViewModel() {
     private val _movieTrailersLiveData = MutableLiveData<List<TrailersResult>>()
     val movieTrailersLiveData: LiveData<List<TrailersResult>> = _movieTrailersLiveData
 
-    private val mMainRepository : MainRepository = MainRepositoryImpl()
+    private val mMainRepository: MainRepository = MainRepositoryImpl()
 
     private val _moviesDetails = MutableLiveData<MoviesDetailsData>()
     val moviesDetails: LiveData<MoviesDetailsData> = _moviesDetails
@@ -34,40 +33,26 @@ class FavoriteViewModel : ViewModel(){
         }
     }
 
-
-
-        fun fetchTrailers(movieId: Int) {
-            viewModelScope.launch {
-               val response = mMainRepository.fetchTrailers(movieId)
-                Log.d("APIResponse", response.toString())
-
-                _movieTrailersLiveData.postValue(response.body()?.results)
-
-            }
-        }
-
-
-
-
-
-//    fun fetchTrailers(movieId: Int) {
-//            val response = mMainRepository.fetchTrailers(movieId)
-//            movieTrailers.value = response.body()?.results
-//    }
-
-
-    fun insert(moviesData: MoviesDetailsData, onSuccess:() -> Unit) =
+    fun insert(moviesData: MoviesDetailsData, onSuccess: () -> Unit) =
         viewModelScope.launch(Dispatchers.IO) {
-            moviesRoomImpl.insertMovie(moviesData){
+            moviesRoomImpl.insertMovie(moviesData) {
                 onSuccess()
             }
         }
 
-    fun delete(moviesData: MoviesDetailsData, onSuccess:() -> Unit) =
+    fun delete(moviesData: MoviesDetailsData, onSuccess: () -> Unit) =
         viewModelScope.launch(Dispatchers.IO) {
-            moviesRoomImpl.deleteMovie(moviesData){
+            moviesRoomImpl.deleteMovie(moviesData) {
                 onSuccess()
             }
         }
 
+    fun fetchTrailers(movieId: Int) {
+        viewModelScope.launch {
+            val response = mMainRepository.fetchTrailers(movieId)
+            Log.d("APIResponse", response.toString())
+            _movieTrailersLiveData.postValue(response.body()?.results)
+
+        }
+    }
 }

@@ -1,4 +1,5 @@
 package com.movies.pagination_library_3.view
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
