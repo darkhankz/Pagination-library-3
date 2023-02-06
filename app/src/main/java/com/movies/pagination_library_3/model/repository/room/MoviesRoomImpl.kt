@@ -1,10 +1,10 @@
-package com.movies.pagination_library_3.model.repository
+package com.movies.pagination_library_3.model.repository.room
 
 import androidx.lifecycle.LiveData
 import com.movies.pagination_library_3.data.MoviesDetailsData
 
-//MoviesRepositoryRealiziation
-class MoviesRoomImpl(private val moviesDao: MoviesDao): MoviesRoomRepository {
+
+class MoviesRoomImpl(private val moviesDao: MoviesDao) : MoviesRoomRepository {
     override val allMovies: LiveData<List<MoviesDetailsData>>
         get() = moviesDao.getAllMovies()
 

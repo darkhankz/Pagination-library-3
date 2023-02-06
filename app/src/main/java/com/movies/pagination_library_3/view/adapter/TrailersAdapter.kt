@@ -1,6 +1,5 @@
 package com.movies.pagination_library_3.view.adapter
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
@@ -13,16 +12,19 @@ import com.movies.pagination_library_3.R
 import com.movies.pagination_library_3.data.trailers.TrailersResult
 
 class TrailersAdapter(private var data: List<TrailersResult>) :
-    RecyclerView.Adapter<TrailersAdapter.TrailerViewHolder>(){
+    RecyclerView.Adapter<TrailersAdapter.TrailerViewHolder>() {
 
-    class TrailerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    class TrailerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val trailerName: TextView = itemView.findViewById(R.id.trailer_name)
         private val playButton: ImageButton = itemView.findViewById(R.id.play_button)
 
         fun bind(trailer: TrailersResult) {
             trailerName.text = trailer.name
             playButton.setOnClickListener {
-                val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + trailer.key))
+                val webIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("http://www.youtube.com/watch?v=" + trailer.key)
+                )
                 itemView.context.startActivity(webIntent)
             }
         }
@@ -40,9 +42,4 @@ class TrailersAdapter(private var data: List<TrailersResult>) :
 
     override fun getItemCount(): Int = data.size
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateData(newData: List<TrailersResult>) {
-        data = newData
-        notifyDataSetChanged()
-    }
 }

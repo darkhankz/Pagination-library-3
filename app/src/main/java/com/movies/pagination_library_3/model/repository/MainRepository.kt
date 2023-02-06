@@ -10,5 +10,4 @@ interface MainRepository {
     fun getAllMovies(): LiveData<PagingData<MoviesDetailsData>>
     suspend fun getMoviesDetails(movieId: Int): Response<MoviesDetailsData>
     suspend fun fetchTrailers(movieId: Int): Response<TrailersResponse>
-
 }

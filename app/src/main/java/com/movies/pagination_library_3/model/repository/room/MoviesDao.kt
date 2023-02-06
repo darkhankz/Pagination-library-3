@@ -1,4 +1,4 @@
-package com.movies.pagination_library_3.model.repository
+package com.movies.pagination_library_3.model.repository.room
 
 
 import androidx.lifecycle.LiveData

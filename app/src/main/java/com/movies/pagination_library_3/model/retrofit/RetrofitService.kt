@@ -26,7 +26,10 @@ interface ApiInterface {
     : Response<MoviesDetailsData>
 
     @GET("movie/{movie_id}/videos")
-    suspend fun getTrailers(@Path("movie_id") movieId: Int, @Query("api_key") apiKey: String): Response<TrailersResponse>
+    suspend fun getTrailers(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String)
+    : Response<TrailersResponse>
     companion object{
         fun create() : ApiInterface {
             val retrofit = Retrofit.Builder()

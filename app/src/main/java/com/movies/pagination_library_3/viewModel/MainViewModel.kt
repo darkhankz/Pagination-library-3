@@ -6,23 +6,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.movies.pagination_library_3.MAIN
+import com.movies.pagination_library_3.MyApplication
 import com.movies.pagination_library_3.data.MoviesDetailsData
 import com.movies.pagination_library_3.model.repository.*
+import com.movies.pagination_library_3.model.repository.room.MoviesRoomDatabase
+import com.movies.pagination_library_3.model.repository.room.MoviesRoomImpl
 import com.movies.pagination_library_3.moviesRoomImpl
 
 
-class MainViewModel(private val mMainRepository : MainRepository): ViewModel() {
+class MainViewModel(private val mMainRepository: MainRepository) : ViewModel() {
     val errorMessage = MutableLiveData<String>()
 
-
-    val context = MAIN.application
     fun getMovieList(): LiveData<PagingData<MoviesDetailsData>> {
         return mMainRepository.getAllMovies().cachedIn(viewModelScope)
     }
 
     fun init() {
-        val daoMovies = MoviesRoomDatabase.getInstance(context).getMoviesDao()
+        val daoMovies = MoviesRoomDatabase.getInstance(MyApplication.appContext).getMoviesDao()
         moviesRoomImpl = MoviesRoomImpl(daoMovies)
     }
 

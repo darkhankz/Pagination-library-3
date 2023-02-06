@@ -1,6 +1,6 @@
 package com.movies.pagination_library_3
 
-import com.movies.pagination_library_3.model.repository.MoviesRoomImpl
+import com.movies.pagination_library_3.model.repository.room.MoviesRoomImpl
 import com.movies.pagination_library_3.view.MainActivity
 
 lateinit var MAIN: MainActivity
