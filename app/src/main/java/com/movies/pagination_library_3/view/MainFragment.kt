@@ -11,7 +11,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.LoadState
 import com.movies.pagination_library_3.MAIN
 import com.movies.pagination_library_3.R
 import com.movies.pagination_library_3.databinding.FragmentMainBinding
@@ -47,10 +46,9 @@ class MainFragment : Fragment(), MenuProvider {
         initViewModelFactory()
         initAdapterClickListener()
         viewModel.init()
-        initErrorObserver()
-        initLoadState()
         observer()
         Log.d("AAA", "Fragment Created")
+
 
     }
 
@@ -64,13 +62,19 @@ class MainFragment : Fragment(), MenuProvider {
                 MAIN.navController.navigate(R.id.action_mainFragment_to_detailFragment, bundle)
             }
         })
+        viewModel.initLoadState(adapter)
+        viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressDialog.isVisible = isLoading
+        }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->
+            errorMessage?.let {
+                Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
+            }
+        }
+
     }
 
-    private fun initErrorObserver() {
-        viewModel.errorMessage.observe(viewLifecycleOwner) {
-            Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
-        }
-    }
 
     private fun initViewModelFactory() {
         viewModel = ViewModelProvider(
@@ -79,28 +83,6 @@ class MainFragment : Fragment(), MenuProvider {
         )[MainViewModel::class.java]
     }
 
-    private fun initLoadState() {
-        adapter.addLoadStateListener { loadState ->
-            // show empty list
-            if (loadState.refresh is LoadState.Loading ||
-                loadState.append is LoadState.Loading
-            )
-                binding.progressDialog.isVisible = true
-            else {
-                binding.progressDialog.isVisible = false
-                // If we have an error, show a toast
-                val errorState = when {
-                    loadState.append is LoadState.Error -> loadState.append as LoadState.Error
-                    loadState.prepend is LoadState.Error -> loadState.prepend as LoadState.Error
-                    loadState.refresh is LoadState.Error -> loadState.refresh as LoadState.Error
-                    else -> null
-                }
-                errorState?.let {
-                    Toast.makeText(activity, it.error.toString(), Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-    }
 
     private fun observer() {
         lifecycleScope.launch {
