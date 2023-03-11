@@ -1,6 +1,7 @@
 package com.movies.pagination_library_3.viewModel
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,8 @@ import com.movies.pagination_library_3.model.repository.MainRepositoryImpl
 import com.movies.pagination_library_3.moviesRoomImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 
 class FavoriteViewModel : ViewModel() {
     private val _movieTrailersLiveData = MutableLiveData<List<TrailersResult>>()
@@ -28,8 +31,14 @@ class FavoriteViewModel : ViewModel() {
 
     fun getMoviesDetails(movieId: Int) {
         viewModelScope.launch {
-            val response = mMainRepository.getMoviesDetails(movieId)
-            _moviesDetails.value = response.body()
+            try {
+                val response = mMainRepository.getMoviesDetails(movieId)
+                _moviesDetails.value = response.body()
+            } catch (e: Exception) {
+                when (e) {
+
+                }
+            }
         }
     }
 
