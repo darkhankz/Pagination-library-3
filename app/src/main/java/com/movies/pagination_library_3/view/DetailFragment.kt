@@ -61,8 +61,9 @@ class DetailFragment : Fragment() {
             favoriteViewModel.fetchTrailers(movieId)
             initObserversTrailers()
         }
-
     }
+
+
 
     private fun initObservers() {
         favoriteViewModel.apply {
@@ -132,4 +133,6 @@ class DetailFragment : Fragment() {
         }
         return valueBoolean
     }
+
+
 }
