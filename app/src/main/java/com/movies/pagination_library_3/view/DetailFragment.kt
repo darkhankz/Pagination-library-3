@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -44,6 +46,15 @@ class DetailFragment : Fragment() {
         trailersRecyclerView.layoutManager = LinearLayoutManager(context)
         val movieId = arguments?.getInt("movie_id")
 
+        favoriteViewModel.loading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressDialogDetailFragment.isVisible = isLoading
+
+            favoriteViewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->
+                errorMessage?.let {
+                    Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
         movieId?.let {
             favoriteViewModel.getMoviesDetails(it)
             initObservers()
