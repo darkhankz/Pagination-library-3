@@ -24,9 +24,11 @@ class FavoriteAdapter(
 
         val itemsViewModel = mList?.get(position)
 
-        Glide.with(holder.itemView.context)
-            .load("https://image.tmdb.org/t/p/w300" + itemsViewModel?.poster_path)
-            .into(holder.imageView)
+        if (itemsViewModel?.poster_path != null) {
+            Glide.with(holder.itemView.context)
+                .load("https://image.tmdb.org/t/p/w300" + itemsViewModel.poster_path)
+                .into(holder.imageView)
+        }
 
         // sets the text to the textview from our itemHolder class
         holder.textView.text = itemsViewModel?.title
