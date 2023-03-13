@@ -8,25 +8,33 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.movies.pagination_library_3.MAIN
 import com.movies.pagination_library_3.R
 import com.movies.pagination_library_3.data.models.MoviesDetailsData
+import com.movies.pagination_library_3.data.repository.MainRepositoryImpl
 import com.movies.pagination_library_3.databinding.FragmentDetailBinding
 import com.movies.pagination_library_3.data.repository.SaveShared
-import com.movies.pagination_library_3.data.repository.room.MoviesDao
+import com.movies.pagination_library_3.data.repository.room.MoviesRoomDatabase
+import com.movies.pagination_library_3.data.repository.room.MoviesRoomImpl
+import com.movies.pagination_library_3.domain.usecases.retrofit.FetchTrailersUseCase
+import com.movies.pagination_library_3.domain.usecases.retrofit.GetMoviesDetailsUseCase
+import com.movies.pagination_library_3.domain.usecases.room.DeleteMovieUseCase
+import com.movies.pagination_library_3.domain.usecases.room.InsertMovieUseCase
 import com.movies.pagination_library_3.presentation.view.adapter.TrailersAdapter
-import com.movies.pagination_library_3.presentation.viewModel.FavoriteViewModel
+import com.movies.pagination_library_3.presentation.viewModel.DetailViewModel
+import com.movies.pagination_library_3.presentation.viewModel.DetailViewModelFactory
+
 
 class DetailFragment : Fragment() {
-    private lateinit var favoriteViewModel: FavoriteViewModel
+    private lateinit var detailViewModel: DetailViewModel
     private var isFavorite = false
     private lateinit var favoriteClick: ImageView
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var trailersRecyclerView: RecyclerView
     private lateinit var trailersAdapter: TrailersAdapter
 
@@ -43,32 +51,44 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        favoriteViewModel = FavoriteViewModel()
+        initViewModelFactory()
         trailersRecyclerView.layoutManager = LinearLayoutManager(context)
         val movieId = arguments?.getInt("movie_id")
 
-        favoriteViewModel.loading.observe(viewLifecycleOwner) { isLoading ->
+        detailViewModel.loading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressDialogDetailFragment.isVisible = isLoading
 
-            favoriteViewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->
+            detailViewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->
                 errorMessage?.let {
                     Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
                 }
             }
         }
         movieId?.let {
-            favoriteViewModel.getMoviesDetails(it)
+            detailViewModel.getMoviesDetails(it)
             initObservers()
-            favoriteViewModel.fetchTrailers(movieId)
+            detailViewModel.fetchTrailers(movieId)
             initObserversTrailers()
         }
     }
 
+    private fun initViewModelFactory() {
+        val dao = MoviesRoomDatabase.getInstance(MAIN.applicationContext).getMoviesDao()
+        detailViewModel = ViewModelProvider(
+            this,
+            DetailViewModelFactory(
+                getMoviesDetailsUseCase = GetMoviesDetailsUseCase(mainRepositoryImpl = MainRepositoryImpl()),
+                insertMovieUseCase = InsertMovieUseCase(MoviesRoomImpl(dao)),
+                deleteMovieUseCase = DeleteMovieUseCase(MoviesRoomImpl(dao)),
+                fetchTrailersUseCase = FetchTrailersUseCase(mainRepositoryImpl = MainRepositoryImpl())
+            )
+        )[DetailViewModel::class.java]
+
+    }
 
 
     private fun initObservers() {
-        favoriteViewModel.apply {
+        detailViewModel.apply {
             moviesDetails.observe(MAIN) {
                 setMovieInformation(it)
             }
@@ -76,7 +96,7 @@ class DetailFragment : Fragment() {
     }
 
     private fun initObserversTrailers() {
-        favoriteViewModel.apply {
+        detailViewModel.apply {
             movieTrailersLiveData.observe(MAIN) {
                 if (it != null) {
                     trailersAdapter = TrailersAdapter(it)
@@ -101,12 +121,12 @@ class DetailFragment : Fragment() {
             isFavorite = if (isFavorite == valueBoolean) {
                 favoriteClick.setImageResource(R.drawable.baseline_favorite_24)
                 SaveShared.setFavorite(MAIN, movieDetails.id.toString(), true)
-                favoriteViewModel.insert(movieDetails) {}
+                detailViewModel.insert(movieDetails) {}
                 true
             } else {
                 favoriteClick.setImageResource(R.drawable.baseline_favorite_border_24)
                 SaveShared.setFavorite(MAIN, movieDetails.id.toString(), false)
-                favoriteViewModel.delete(movieDetails) {}
+                detailViewModel.delete(movieDetails) {}
                 false
             }
         }
@@ -135,6 +155,5 @@ class DetailFragment : Fragment() {
         }
         return valueBoolean
     }
-
 
 }

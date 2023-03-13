@@ -18,19 +18,23 @@ interface ApiInterface {
         @Query("language") language: String,
         @Query("page") page: Int
     ): Response<MoviesData>
+
     @GET("movie/{movie_id}")
     suspend fun getMoviesDetails(
         @Path("movie_id") id: Int,
-        @Query("api_key") apiKey: String)
-    : Response<MoviesDetailsData>
+        @Query("api_key") apiKey: String
+    )
+            : Response<MoviesDetailsData>
 
     @GET("movie/{movie_id}/videos")
     suspend fun getTrailers(
         @Path("movie_id") movieId: Int,
-        @Query("api_key") apiKey: String)
-    : Response<TrailersResponse>
-    companion object{
-        fun create() : ApiInterface {
+        @Query("api_key") apiKey: String
+    )
+            : Response<TrailersResponse>
+
+    companion object {
+        fun create(): ApiInterface {
             val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(BASE_URL)

@@ -1,6 +1,5 @@
 package com.movies.pagination_library_3.presentation.view
 
-import android.app.Application
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -16,7 +15,7 @@ import com.movies.pagination_library_3.MAIN
 import com.movies.pagination_library_3.R
 import com.movies.pagination_library_3.data.repository.MainRepositoryImpl
 import com.movies.pagination_library_3.databinding.FragmentMainBinding
-import com.movies.pagination_library_3.data.repository.MyViewModelFactory
+import com.movies.pagination_library_3.presentation.viewModel.MainViewModelFactory
 import com.movies.pagination_library_3.domain.usecases.retrofit.GetAllMoviesUseCase
 import com.movies.pagination_library_3.presentation.view.adapter.MoviePagerAdapter
 import com.movies.pagination_library_3.presentation.viewModel.MainViewModel
@@ -82,7 +81,7 @@ class MainFragment : Fragment(), MenuProvider {
     private fun initViewModelFactory() {
         viewModel = ViewModelProvider(
             this,
-            MyViewModelFactory(
+            MainViewModelFactory(
                 getAllMoviesUseCase = GetAllMoviesUseCase(mainRepositoryImpl = MainRepositoryImpl())
             )
         )[MainViewModel::class.java]

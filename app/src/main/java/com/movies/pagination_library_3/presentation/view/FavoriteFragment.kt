@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.movies.pagination_library_3.MAIN
 import com.movies.pagination_library_3.R
+import com.movies.pagination_library_3.data.repository.room.MoviesRoomDatabase
 import com.movies.pagination_library_3.databinding.FragmentFavoriteBinding
 import com.movies.pagination_library_3.presentation.view.adapter.FavoriteAdapter
 import com.movies.pagination_library_3.presentation.viewModel.FavoriteViewModel
@@ -32,7 +33,9 @@ class FavoriteFragment : Fragment(), FavoriteAdapter.OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        favoriteViewModel = FavoriteViewModel()
+        val dao = MoviesRoomDatabase.getInstance(MAIN.applicationContext).getMoviesDao()
+        favoriteViewModel = FavoriteViewModel(dao)
+
         mMoviesRecycler.layoutManager = GridLayoutManager(context, 2)
         initObservers()
 
