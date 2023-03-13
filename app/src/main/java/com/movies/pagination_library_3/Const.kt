@@ -1,7 +1,7 @@
 package com.movies.pagination_library_3
 
 import com.movies.pagination_library_3.data.repository.room.MoviesRoomImpl
-import com.movies.pagination_library_3.presentation.view.MainActivity
+import com.movies.pagination_library_3.presentation.MainActivity
 
 lateinit var MAIN: MainActivity
 const val NETWORK_PAGE_SIZE = 25
