@@ -1,4 +1,4 @@
-package com.movies.pagination_library_3.presentation.view
+package com.movies.pagination_library_3.presentation
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -10,21 +10,36 @@ import androidx.navigation.fragment.NavHostFragment
 import com.movies.pagination_library_3.MAIN
 import com.movies.pagination_library_3.R
 import com.movies.pagination_library_3.databinding.ActivityMainBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
     lateinit var navController: NavController
-    private lateinit var binding: ActivityMainBinding
-
+    private var _binding: ActivityMainBinding? = null
+    private val mBinding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        _binding = ActivityMainBinding.inflate(layoutInflater)
+
+        supportActionBar?.hide()
+
+        setContentView(R.layout.fragment_splash)
+
         MAIN = this
-        setContentView(binding.root)
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-        this.navController = navController
+
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(5000)
+            supportActionBar?.show()
+            setContentView(mBinding.root)
+            val navHostFragment =
+                supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            val navController = navHostFragment.navController
+            this@MainActivity.navController = navController
+        }
+
 
 
         if (!isNetworkConnected()) {
