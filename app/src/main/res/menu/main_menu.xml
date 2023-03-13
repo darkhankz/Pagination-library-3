@@ -8,10 +8,4 @@
         app:showAsAction="always">
     </item>
 
-    <item
-        android:id="@+id/item_favorite_visable"
-        android:icon="@drawable/baseline_favorite_border_24"
-        android:title=""
-        app:showAsAction="ifRoom">
-    </item>
 </menu>
